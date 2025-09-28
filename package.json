@@ -9,9 +9,5 @@
   "scripts": {
     "start": "node cli.js"
   },
-  "dependencies": {
-    "chalk": "^5.3.0",
-    "brain.js": "^2.2.0",
-    "node-fetch": "^3.3.2"
-  }
+  "dependencies": {}
 }

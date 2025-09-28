@@ -1,57 +1,62 @@
-const readline = require('readline');
-const chalk = require('chalk');
-const { pense } = require('./neraune/pense');
-const { execute } = require('./SDK/tools');
-const { searchQuery } = require('./engine/search');
-const { learn, recall } = require('./AprentisSage/know');
+import { Command } from 'commander';
+import chalk from 'chalk';
+import figlet from 'figlet';
+import gradient from 'gradient-string';
+import readline from 'readline';
+import ora from 'ora';
+import { pense } from './neraune/pense.js';
+import { execute } from './SDK/tools.js';
+import { learn, recall } from './AprentisSage/know.js';
+import { searchQuery } from './engine/search.js';
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  prompt: chalk.green('🧠 Ledge> ')
-});
+const results = await searchQuery("Node.js tutorial");
+console.log(results);
 
-console.log(chalk.blueBright("Bienvenue dans Ledge CLI - ton mini cerveau IA"));
-console.log(chalk.yellow("Tape 'exit' pour quitter.\n"));
+const program = new Command();
+program.name('drn').version('1.0.0');
 
-rl.prompt();
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+function askQuestion(query) {
+    return new Promise(resolve => rl.question(query, resolve));
+}
 
-rl.on('line', async (line) => {
-  const input = line.trim();
+// --- Shell interactif ---
+async function dragonShell() {
+    console.clear();
+    console.log(gradient.passion(figlet.textSync('DRAGON', { font: 'Standard' })));
+    console.log(chalk.hex('#FF4500')('Bienvenue. Je suis Dragon. Tapez `exit` pour quitter.\n'));
 
-  if (input.toLowerCase() === 'exit') {
-    console.log(chalk.red("Au revoir ! 👋"));
-    return rl.close();
-  }
+    while (true) {
+        const task = await askQuestion(chalk.bold.red('🐉 > '));
+        if (task.toLowerCase() === 'exit') break;
+        if (task.startsWith('learn ')) {
+            const [, cmd, ...rest] = task.split(' ');
+            const action = rest.join(' ');
+            learn(cmd, action);
+            console.log(chalk.cyan(`✅ Appris : ${cmd} -> ${action}`));
+            continue;
+        }
 
-  // Vérifie si l'utilisateur veut apprendre quelque chose de nouveau
-  if (input.startsWith('learn ')) {
-    const [, cmd, ...rest] = input.split(' ');
-    const action = rest.join(' ');
-    learn(cmd, action);
-    console.log(chalk.cyan(`✅ Appris : ${cmd} -> ${action}`));
-    rl.prompt();
-    return;
-  }
+        const spinner = ora('Le dragon réfléchit...').start();
+        try {
+            const action = await pense(task);
+            if (action.startsWith('exec:')) {
+                const result = execute(action.replace('exec:', ''));
+                spinner.succeed('✅ Terminé.');
+                console.log(chalk.magenta(result));
+            } else {
+                spinner.succeed('✅ Réponse générée.');
+                console.log(chalk.green(action));
+            }
+        } catch (err) {
+            spinner.fail(chalk.red(`Erreur : ${err.message}`));
+        }
+    }
 
-  // Raisonner avec le cerveau
-  const action = await pense(input);
+    rl.close();
+}
 
-  if (action.startsWith("exec:")) {
-    const cmd = action.replace("exec:", "");
-    const result = execute(cmd);
-    console.log(chalk.magenta(result));
-  } else if (action.startsWith("search:")) {
-    const query = action.replace("search:", "");
-    const results = await searchQuery(query);
-    console.log(chalk.yellow("Résultats de recherche :"));
-    results.forEach((r, i) => console.log(`${i + 1}. ${r.Text || r.Result}`));
-  } else {
-    console.log(chalk.green(action));
-  }
+// Commande par défaut : shell interactif
+program.action(dragonShell);
 
-  rl.prompt();
-}).on('close', () => {
-  console.log(chalk.red("Fermeture du CLI."));
-  process.exit(0);
-});
+program.parseAsync(process.argv);

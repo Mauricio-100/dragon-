@@ -1,0 +1,17 @@
+{
+  "name": "ledge-cli",
+  "version": "1.0.0",
+  "description": "Mini cerveau IA local",
+  "main": "cli.js",
+  "bin": {
+    "drn": "./bin/drn"
+  },
+  "scripts": {
+    "start": "node cli.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "brain.js": "^2.2.0",
+    "node-fetch": "^3.3.2"
+  }
+}

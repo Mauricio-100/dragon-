@@ -1,7 +1,7 @@
-const { pense } = require('./neraune/pense');
-const { execute } = require('./SDK/tools');
-const { searchQuery } = require('./engine/search');
-const { learn, recall } = require('./AprentisSage/know');
+import { pense } from "./neraune/pense.js";
+import { execute } from "./SDK/tools.js";
+import { searchQuery } from "./engine/search.js";
+import { learn, recall } from "./AprentisSage/know.js";
 
 async function main() {
   console.log("🤖 Ledge mini cerveau démarré...");

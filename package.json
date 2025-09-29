@@ -7,12 +7,12 @@
     "drn": "./bin/drn.js"
   },
   "dependencies": {
-    "chalk": "^4.1.2",              // compatible Node 16
-    "commander": "^9.5.0",          // compatible Node 16
-    "figlet": "^1.5.2",             // compatible Node 16
-    "gradient-string": "^2.0.1",    // compatible Node 16
-    "ora": "^6.1.2",                // dernière version compatible Node 16
-    "node-fetch": "^2.6.7",         // Node 16 n'aime pas fetch v3
-    "execa": "^5.1.1"               // compatible Node 16
+    "chalk": "^4.1.2",
+    "commander": "^9.5.0",
+    "figlet": "^1.5.2",
+    "gradient-string": "^2.0.1",
+    "ora": "^6.1.2",
+    "node-fetch": "^2.6.7",
+    "execa": "^5.1.1"
   }
 }

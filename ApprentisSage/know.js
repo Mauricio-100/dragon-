@@ -5,8 +5,12 @@ function learn(command, action) {
 }
 
 function recall() {
-  const data = knowledge.map(k => ({ input: { [k.input]: 1 }, output: { create: 1 } }));
+  // On renvoie des données formatées pour brain.js
+  const data = knowledge.map(k => ({
+    input: { [k.input]: 1 },
+    output: { create: 1 }
+  }));
   return data;
 }
 
-module.exports = { learn, recall };
+export { learn, recall };
